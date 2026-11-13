@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Check, ChevronRight, MapPin, QrCode, Sparkles, Users } from 'lucide-react'
 import hotpot from '@/assets/hotpot.jpg'
 import { Button } from '@/components/ui/button'
+import { products } from '@/data/menu'
+import { money } from '@/lib/utils'
 
 const tableOptions = [
   { code: 'A08', areaKey: 'bind.area.hall', seats: 4 },
@@ -9,6 +11,8 @@ const tableOptions = [
   { code: 'C06', areaKey: 'bind.area.room', seats: 4 },
   { code: 'D03', areaKey: 'bind.area.window', seats: 6 },
 ]
+
+const recommendedProducts = products.filter((product) => product.badge).slice(0, 3)
 
 interface HomeViewProps { onBind: (table: string) => void }
 
@@ -32,6 +36,30 @@ export function HomeView({ onBind }: HomeViewProps) {
             {[t('bind.feature1'), t('bind.feature2'), t('bind.feature3')].map((item) => (
               <span key={item} className="flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-sm"><Check size={15} className="text-chili-500" />{item}</span>
             ))}
+          </div>
+          <div className="mt-8 rounded-3xl border border-white/80 bg-white/85 p-4 shadow-card backdrop-blur">
+            <div className="mb-4 flex items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-extrabold uppercase tracking-[0.18em] text-chili-500">{t('bind.recommend_badge')}</p>
+                <h2 className="mt-1 text-xl font-extrabold text-charcoal-900">{t('bind.recommend_title')}</h2>
+              </div>
+              <span className="shrink-0 rounded-full bg-rice-100 px-3 py-1 text-xs font-bold text-charcoal-500">{t('bind.recommend_hint')}</span>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {recommendedProducts.map((product) => (
+                <article key={product.id} className="overflow-hidden rounded-2xl bg-rice-50 shadow-sm">
+                  <div className="relative h-24">
+                    <img src={product.image} alt={t(product.name)} className="h-full w-full object-cover" />
+                    {product.badge && <span className="absolute left-2 top-2 rounded-full bg-amber-400 px-2 py-1 text-[10px] font-extrabold text-charcoal-900">{t(product.badge)}</span>}
+                  </div>
+                  <div className="p-3">
+                    <h3 className="line-clamp-1 text-sm font-extrabold text-charcoal-900">{t(product.name)}</h3>
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-charcoal-500">{t(product.description)}</p>
+                    <p className="mt-2 text-base font-extrabold text-chili-500">{money(product.price)} <small className="text-[10px] font-medium text-charcoal-500">{t('menu.from')}</small></p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
